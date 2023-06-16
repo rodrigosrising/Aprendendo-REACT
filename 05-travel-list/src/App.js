@@ -7,11 +7,17 @@ const initialItems = [
 ];
 
 function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <>
       <Header />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </>
   );
@@ -23,7 +29,7 @@ function Header() {
   return <h1>🌴 React travel list ⛱</h1>;
 } //Logo
 
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -33,7 +39,9 @@ function Form() {
     if (!description) return;
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-    console.log(newItem);
+    //console.log(newItem);
+
+    onAddItems(newItem);
 
     //reseta os valores para o estado inicial
     setDescription("");
@@ -71,11 +79,11 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
